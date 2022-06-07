@@ -1,29 +1,37 @@
+import { RowDataPacket } from "mysql2";
 import { createPool, PoolOptions } from "mysql2/promise";
-import { readFile, readFileSync } from "fs";
-import { join } from "path";
 
 export type Employee = {
   id: number;
-  name: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  gender: string;
   salary: number;
 };
 
 class DBCompany {
   private readonly config: PoolOptions;
+  private readonly configQuery: PoolOptions;
   constructor() {
     this.config = {
       host: process.env.BDD_HOST,
       user: process.env.BDD_USER,
       password: process.env.BDD_PASS,
+    };
+
+    this.configQuery = {
+      ...this.config,
       database: "company",
     };
   }
 
   private async queryDB(query: string) {
-    const pool = createPool(this.config);
+    const pool = createPool(this.configQuery);
     try {
       const [rows] = await pool.query(query);
-      return rows;
+      const rowsFormated = await JSON.parse(JSON.stringify(rows));
+      return rowsFormated;
     } catch (error) {
       console.log(error);
     } finally {
@@ -31,52 +39,29 @@ class DBCompany {
     }
   }
 
-  async getEmployees(): Promise<Employee[]> {
-    const rows = await this.queryDB("SELECT * FROM employee");
-    const employees = await JSON.parse(JSON.stringify(rows));
-    return employees;
+  async getNamesDatabases(): Promise<string[] | undefined> {
+    const pool = createPool(this.config);
+    const query = `SHOW DATABASES`;
+    try {
+      const [rows] = await pool.query(query);
+      const rowsFormated: { Database: string }[] = await JSON.parse(
+        JSON.stringify(rows)
+      );
+      const names = rowsFormated.map((row) => row.Database);
+      return names;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      await pool.end();
+    }
+  }
+
+  async getCountEmployees(): Promise<number | undefined> {
+    const query = `SELECT COUNT(*) as count FROM employee`;
+    const rows = await this.queryDB(query);
+    const count = rows[0].count;
+    return count;
   }
 }
-
-export const createDB = async () => {
-  const config: PoolOptions = {
-    host: process.env.BDD_HOST || "localhost",
-    user: process.env.BDD_USER || "root",
-    password: process.env.BDD_PASS || "newpass",
-  };
-  const pool = createPool(config);
-  try {
-    const employeeSql = readFileSync(
-      join(__dirname, "../database/employee.sql"),
-      {
-        encoding: "utf-8",
-      }
-    );
-    const rowsToInsertData = employeeSql.toString().split(";");
-    rowsToInsertData.forEach(async (row) => {
-      await pool.query(row);
-    });
-  } catch (error) {
-    console.log(error);
-  } finally {
-    await pool.end();
-  }
-};
-
-export const destroyDB = async () => {
-  const config: PoolOptions = {
-    host: process.env.BDD_HOST || "localhost",
-    user: process.env.BDD_USER || "root",
-    password: process.env.BDD_PASS || "newpass",
-  };
-  const pool = createPool(config);
-  try {
-    await pool.query(" DROP DATABASE IF EXISTS company; ");
-  } catch (error) {
-    console.log(error);
-  } finally {
-    await pool.end();
-  }
-};
 
 export default DBCompany;

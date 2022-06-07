@@ -1,31 +1,19 @@
-import DBCompany, { createDB, destroyDB } from "../src/DBCompany";
+import DBCompany from "../src/DBCompany";
 import dotenv from "dotenv";
 
 dotenv.config();
 
 const db = new DBCompany();
+describe("Test DB Company", () => {
+  test("Deberian existir una base de datos llamada company", async () => {
+    const databases = await db.getNamesDatabases();
+    expect(databases).toContain("company");
+  });
 
-beforeEach(() => {
-  return createDB();
+  test("Deberian existir 1000 empleados registrados", async () => {
+    const cantidadEmpleados = await db.getCountEmployees();
+    expect(cantidadEmpleados).toBe(1000);
+  });
 });
 
-afterEach(() => {
-  return destroyDB();
-});
-
-test("Deberian existir tres empleados", async () => {
-  const employees = await db.getEmployees();
-  expect(employees.length).toBeGreaterThanOrEqual(3);
-});
-
-test("Deberia existir un empleado con sueldo igual a 50000", async () => {
-  const employees = await db.getEmployees();
-  const employee = employees.find((employee) => employee.salary === 50000);
-  expect(employee).toBeDefined();
-});
-
-test("Deberia existir un empleado llamado Ryan Ray", async () => {
-  const employees = await db.getEmployees();
-  const employee = employees.find((employee) => employee.name === "Ryan Ray");
-  expect(employee).toBeDefined();
-});
+describe("Test table employee", () => {});
