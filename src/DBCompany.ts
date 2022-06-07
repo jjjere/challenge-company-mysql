@@ -1,4 +1,3 @@
-import { RowDataPacket } from "mysql2";
 import { createPool, PoolOptions } from "mysql2/promise";
 
 export type Employee = {
@@ -91,6 +90,12 @@ class DBCompany {
     const rows: { count: number }[] = await this.queryDB(query);
     const count = rows[0].count;
     return count;
+  }
+
+  async getEmployeeByName(name: string): Promise<Employee[] | undefined> {
+    const query = ``;
+    const rows: Employee[] = await this.queryDB(query);
+    return rows;
   }
 }
 

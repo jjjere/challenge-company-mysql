@@ -38,4 +38,9 @@ describe("Test table employee", () => {
     const names = await db.getFirstNames();
     expect(names.length).toBe(1000);
   });
+
+  test("Deberia existir al menos una persona llamada Kate", async () => {
+    const employees = await db.getEmployeeByName("Kate");
+    expect(employees.length).toBeGreaterThan(0);
+  });
 });
