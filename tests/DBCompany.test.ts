@@ -21,4 +21,9 @@ describe("Test table employee", () => {
     const cantidadEmpleados = await db.getNumberOfFemaleEmployees();
     expect(cantidadEmpleados).toBe(484);
   });
+
+  test("Deberian existir 437 empleadas", async () => {
+    const cantidadEmpleados = await db.getNumberOfMaleEmployees();
+    expect(cantidadEmpleados).toBe(437);
+  });
 });
