@@ -27,6 +27,13 @@ describe("Test table employee", () => {
     expect(cantidadEmpleados).toBe(437);
   });
 
+  test("Deberian existir 105 personas con salario menor a 75000", async () => {
+    const cantidadEmpleados = await db.getNumberOfEmployeesWithSalaryLessTo(
+      75000
+    );
+    expect(cantidadEmpleados).toBe(105);
+  });
+
   test("Deberia existir una lista con los nombres de todos los empleados", async () => {
     const names = await db.getFirstNames();
     expect(names.length).toBe(1000);

@@ -83,6 +83,15 @@ class DBCompany {
     const names = rows.map((row) => row.first_name);
     return names;
   }
+
+  async getNumberOfEmployeesWithSalaryLessTo(
+    salary: number
+  ): Promise<number | undefined> {
+    const query = ``;
+    const rows: { count: number }[] = await this.queryDB(query);
+    const count = rows[0].count;
+    return count;
+  }
 }
 
 export default DBCompany;
