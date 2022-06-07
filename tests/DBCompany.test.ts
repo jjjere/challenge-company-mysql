@@ -26,4 +26,9 @@ describe("Test table employee", () => {
     const cantidadEmpleados = await db.getNumberOfMaleEmployees();
     expect(cantidadEmpleados).toBe(437);
   });
+
+  test("Deberia existir una lista con los nombres de todos los empleados", async () => {
+    const names = await db.getFirstNames();
+    expect(names.length).toBe(1000);
+  });
 });

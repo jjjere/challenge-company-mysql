@@ -76,6 +76,13 @@ class DBCompany {
     const count = rows[0].count;
     return count;
   }
+
+  async getFirstNames(): Promise<string[] | undefined> {
+    const query = ``;
+    const rows: { first_name: string }[] = await this.queryDB(query);
+    const names = rows.map((row) => row.first_name);
+    return names;
+  }
 }
 
 export default DBCompany;
