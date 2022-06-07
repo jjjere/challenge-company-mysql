@@ -57,8 +57,8 @@ class DBCompany {
   }
 
   async getCountEmployees(): Promise<number | undefined> {
-    const query = `SELECT COUNT(*) as count FROM employee`;
-    const rows = await this.queryDB(query);
+    const query = `select count(*) as count from employee`;
+    const rows: { count: number }[] = await this.queryDB(query);
     const count = rows[0].count;
     return count;
   }
