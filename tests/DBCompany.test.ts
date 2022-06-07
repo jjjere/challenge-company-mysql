@@ -16,4 +16,9 @@ describe("Test DB Company", () => {
   });
 });
 
-describe("Test table employee", () => {});
+describe("Test table employee", () => {
+  test("Deberian existir 484 empleadas", async () => {
+    const cantidadEmpleados = await db.getNumberOfFemaleEmployees();
+    expect(cantidadEmpleados).toBe(484);
+  });
+});

@@ -62,6 +62,13 @@ class DBCompany {
     const count = rows[0].count;
     return count;
   }
+
+  async getNumberOfFemaleEmployees(): Promise<number | undefined> {
+    const query = ``;
+    const rows: { count: number }[] = await this.queryDB(query);
+    const count = rows[0].count;
+    return count;
+  }
 }
 
 export default DBCompany;
