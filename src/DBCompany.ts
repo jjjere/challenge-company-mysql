@@ -1,4 +1,6 @@
 import { createPool, PoolOptions } from "mysql2/promise";
+import { readFile, readFileSync } from "fs";
+import { join } from "path";
 
 export type Employee = {
   id: number;
@@ -44,14 +46,16 @@ export const createDB = async () => {
   };
   const pool = createPool(config);
   try {
-    await pool.query(" CREATE DATABASE IF NOT EXISTS company; ");
-    await pool.query(" USE company; ");
-    await pool.query(
-      " CREATE TABLE employee ( id INT(11) NOT NULL AUTO_INCREMENT, name VARCHAR(45) DEFAULT NULL, salary INT(11) DEFAULT NULL, PRIMARY KEY(id));"
+    const employeeSql = readFileSync(
+      join(__dirname, "../database/employee.sql"),
+      {
+        encoding: "utf-8",
+      }
     );
-    await pool.query(
-      " INSERT INTO employee values (1, 'Ryan Ray', 20000), (2, 'Joe McMillan', 40000), (3, 'John Carter', 50000); "
-    );
+    const rowsToInsertData = employeeSql.toString().split(";");
+    rowsToInsertData.forEach(async (row) => {
+      await pool.query(row);
+    });
   } catch (error) {
     console.log(error);
   } finally {
