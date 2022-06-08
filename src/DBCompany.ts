@@ -83,13 +83,16 @@ class DBCompany {
     return names;
   }
 
-  async getNumberOfEmployeesWithSalaryLessTo(
-    salary: number
-  ): Promise<number | undefined> {
+  async getEmployeesWithSalary({
+    minSalary = 0,
+    maxSalary = Number.MAX_SAFE_INTEGER,
+  }: {
+    minSalary?: number;
+    maxSalary?: number;
+  }): Promise<Employee[] | undefined> {
     const query = ``;
-    const rows: { count: number }[] = await this.queryDB(query);
-    const count = rows[0].count;
-    return count;
+    const rows: Employee[] = await this.queryDB(query);
+    return rows;
   }
 
   async getEmployeeByName(name: string): Promise<Employee[] | undefined> {

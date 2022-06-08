@@ -28,19 +28,25 @@ describe("Test table employee", () => {
   });
 
   test("Deberian existir 105 personas con salario menor a 75000", async () => {
-    const cantidadEmpleados = await db.getNumberOfEmployeesWithSalaryLessTo(
-      75000
-    );
-    expect(cantidadEmpleados).toBe(105);
+    const empleados = await db.getEmployeesWithSalary({ maxSalary: 75000 });
+    expect(empleados?.length).toBe(105);
+  });
+
+  test("Deberian existir 65 personas con salario mayor a 75000 y menor a 100000", async () => {
+    const empleados = await db.getEmployeesWithSalary({
+      minSalary: 75000,
+      maxSalary: 100000,
+    });
+    expect(empleados?.length).toBe(65);
   });
 
   test("Deberia existir una lista con los nombres de todos los empleados", async () => {
     const names = await db.getFirstNames();
-    expect(names.length).toBe(1000);
+    expect(names?.length).toBe(1000);
   });
 
   test("Deberia existir al menos una persona llamada Kate", async () => {
     const employees = await db.getEmployeeByName("Kate");
-    expect(employees.length).toBeGreaterThan(0);
+    expect(employees?.length).toBeGreaterThan(0);
   });
 });
