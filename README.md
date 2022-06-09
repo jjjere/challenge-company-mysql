@@ -1,4 +1,4 @@
-# Challenge company mysql
+# Challenge company mysql 🙌
 
 Desafio: superar test haciendo uso de consultas en sql.
 
